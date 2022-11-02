@@ -1,0 +1,19 @@
+{
+    "name": "nyawach/laravel-pesapal",
+    "description": "A simple pesapal payment v3 integration into laravel",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Nyawach\\LaravelPesapal\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "jnyawach",
+            "email": "nyawach41@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
