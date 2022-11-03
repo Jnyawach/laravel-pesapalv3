@@ -56,11 +56,14 @@ To publish the pesapal config file and migrations run:
 Refer to config/pesapal.php and create environment variable in your
 .env file. See example below.
 
-```PESAPAL_ENV=production
+```
+PESAPAL_ENV=production
 PESAPAL_CONSUMER_KEY=qkio1BGGYAXTu2JOfm7XSXNruoZsrqEW
 PESAPAL_CONSUMER_SECRET=osGQ364R49cXKeOYSpaOnT++rHs=
 PESAPAL_GUARD=ahd55hrg57edhWYDGSS
-PESAPAL_IPN_ID=eh93o68a-32g1-49jd-bb77-df7c4c2e37cb```
+PESAPAL_IPN_ID=eh93o68a-32g1-49jd-bb77-df7c4c2e37cb
+```
+
 
 PEASAPAL_ENV: Please specify whether the environment is sandbox or production
 PESAPAL_CONSUMER_KEY and PESAPAL_CONSUMER_SECRET Production keys can be obtained [here](https://www.pesapal.com/dashboard/account/register). Sandbox or testing keys can be found [here](https://developer.pesapal.com/api3-demo-keys.txt) 
