@@ -163,5 +163,5 @@ $postData = array();
 ```
 
 On a successful order request, you will get a response that looks like this
-<img src="src/images/order-response.jpg">
+<img src="src/images/order-response.JPG">
 
