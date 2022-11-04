@@ -124,8 +124,8 @@ use Nyawach\LaravelPesapal\Facades\Pesapal;
 class PesapalController extends Controller
 {
 //submit an order request
-
-$postData = array();
+ public function submitOrder(){
+ $postData = array();
         $postData["language"] = "EN"; //nullable
         $postData["currency"] = "KES"; //This represents the currency you want to charge your customers. ISO formats
         $postData["amount"] = number_format(1,2); //must be float value and required
@@ -157,6 +157,8 @@ $postData = array();
           * interface
         
        */
+ }
+
          
          
 }
