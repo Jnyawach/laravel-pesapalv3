@@ -15,16 +15,25 @@ class Pesapal extends Model
      * @var array<int, string>
      */
     protected $fillable=[
-       'first_name',
-       'last_name',
-       'phone_number',
-       'email',
-       'amount',
-       'currency',
-       'reference',
-       'description',
-       'status',
-       'tracking_id',
-       'payment_method'
+        'first_name',
+        'middle_name',
+        'last_name',
+        'phone_number',
+        'billing_address_line_1',
+        'billing_address_line_2',
+        'city',
+        'state',
+        'postal_code',
+        'country_code',
+        'zip_code',
+        'language',
+        'email',
+        'amount',
+        'currency',
+        'merchant_reference',
+        'description',
+        'status',
+        'tracking_id',
+        'payment_method'
     ];
 }

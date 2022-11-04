@@ -72,6 +72,14 @@ https://www.myapplication/callback/ahd55hrg57edhWYDGSS
 
 PESAPAL_IPN_ID: For production use this [form](https://pay.pesapal.com/iframe/PesapalIframe3/IpnRegistration) to create IPN URLs and save the id. For testing or sandbox use this [form](https://cybqa.pesapal.com/PesapalIframe/PesapalIframe3/IpnRegistration). IPN URL can either be POST or GET choose the one you feel for comfortable with.
 
+IPN stands for Instant Payment Notification. When a payment is made against a transaction, Pesapal will trigger an IPN call to the notification URL related to this transaction. This notification URL is usually located on your servers. These notifications allows you to be alerted in real time whenever there is a status change for any transaction.
+
+An IPN is particular important as it allows you to be notified incase the following happens:
+
+1. Your client gets disconnected after payment due to internet issues
+2. Your client experiences server errors hence Pesapal and your application gets disconnected before callback URL is loaded.
+3. Your client exits your application / closes the browser during payment.
+4. The transaction is rejected.
 
 ##### Alternatively register IPN URLs 
 
@@ -95,6 +103,65 @@ public function getIpn(){
 }
 }
 ```
+Make sure you have saved the IPN id in your .env file.
 
+A successful IPN registration response will look like this.
 
+<img src="src/images/ipn-response.JPG">
+
+##### Submitting an order request
+The way Pesapal works is that you submit an order request. A successful order will return a response containing order_tracking_id and an Iframe link.
+you can render the payment iframe within your website or redirect users to the iframe link to make payments. Thereafter you can submit a request to get the 
+payment status. 
+
+It is also important that you save the order details in you database.
+
+See below on how to submit an order request
+
+```php
+use Nyawach\LaravelPesapal\Facades\Pesapal;
+
+class PesapalController extends Controller
+{
+//submit an order request
+
+$postData = array();
+        $postData["language"] = "EN"; //nullable
+        $postData["currency"] = "KES"; //This represents the currency you want to charge your customers. ISO formats
+        $postData["amount"] = number_format(1,2); //must be float value and required
+        $postData["id"] = 234; //Can be your unique order or product id and is required
+        $postData["description"] = "Payment for order number AFED67"; //required
+        $postData["billing_address"]["phone_number"] = "07XXXXXXXX";//client phone number required if email unavailable
+        $postData["billing_address"]["email_address"] = "john.doe@example.com"; //client email address
+        $postData["billing_address"]["country_code"] = "KE";//2 characters long country code in [ISO 3166-1]
+        $postData["billing_address"]["first_name"] = "John";
+        $postData["billing_address"]["middle_name"] = "Doe";
+        $postData["billing_address"]["last_name"] = "Musa";
+        $postData["billing_address"]["line_1"] = "";//nullable
+        $postData["billing_address"]["line_2"] = "";
+        $postData["billing_address"]["city"] = "Nairobi";//nullable
+        $postData["billing_address"]["state"] = "Kenya";//nullable
+        $postData["billing_address"]["postal_code"] = "";//nullable
+        $postData["billing_address"]["zip_code"] = "";//nullable
+        $postData["callback_url"] = "https://www.myapplication.com/response-page/".config('pesapal.pesapal_guard');//ensure you guard your callback url
+        $postData["notification_id"] = config('pesapal.pesapal_ipn_id'); //IPN_id from your .env file
+        $postData["terms_and_conditions_id"] = "";
+        //return $postData;
+        $order=Pesapal::getMerchertOrderURL($postData);
+         
+         /*
+          * You can decide to save the transaction details here or
+          * later when submitting request for order status.
+          *  Lets save the transaction details later.
+          * Then render the iframe to present the user with a payment
+          * interface
+        
+       */
+         
+         
+}
+```
+
+On a successful order request, you will get a response that looks like this
+<img src="src/images/order-response.jpg">
 
