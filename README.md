@@ -120,6 +120,7 @@ See below on how to submit an order request
 
 ```php
 use Nyawach\LaravelPesapal\Facades\Pesapal;
+use \Nyawach\LaravelPesapal\Models\Pesapal;
 
 class PesapalController extends Controller
 {
@@ -147,16 +148,41 @@ class PesapalController extends Controller
         $postData["notification_id"] = config('pesapal.pesapal_ipn_id'); //IPN_id from your .env file
         $postData["terms_and_conditions_id"] = "";
         //return $postData;
-        $order=Pesapal::getMerchertOrderURL($postData);
+        $order=Pesapal::getMerchantOrderURL($postData);
          
          /*
-          * You can decide to save the transaction details here or
-          * later when submitting request for order status.
-          *  Lets save the transaction details later.
+          * Save the transaction details to the database then later update
+          * based on transaction status
           * Then render the iframe to present the user with a payment
           * interface
         
        */
+       
+       $transaction=new Pesapal()
+       $transaction->tracking_id=$order->order_tracking_id
+       $transaction->language=$postData['language'];
+       $transaction->currency=$postData['currency'];
+       $transaction->amount=$postData['amount'];
+       $transaction->merchant_reference=$postData['id'];
+       $transaction->decription=$postData["description"];
+       $transaction->phone_number=$postData["billing_address"]["phone_number"] ; 
+       $transaction->email_address=$postData["billing_address"]["email_address"];
+       $transaction->country_code=$postData["billing_address"]["country_code"];
+       $transaction->first_name=$postData["billing_address"]["first_name"];
+       $transaction->middle_name=$postData["billing_address"]["middle_name"];
+       $transaction->last_name=$postData["billing_address"]["last_name"];
+       $transaction->billing_address_line_1=$postData["billing_address"]["line_1"];
+       $transaction->billing_address_line_2=$postData["billing_address"]["line_2"];
+       $transaction->city=$postData["billing_address"]["city"];
+       $transaction->state=$postData["billing_address"]["state"];
+       $transaction->postal_code=$postData["billing_address"]["postal_code"];
+       $transaction->zip_code=$postData["billing_address"]["zip_code"];
+       
+       $transaction->save();
+       
+       //You only need to save fields that are important to you
+       
+       
  }
 
          
@@ -167,3 +193,75 @@ class PesapalController extends Controller
 On a successful order request, you will get a response that looks like this
 <img src="src/images/order-response.JPG">
 
+The redirect_url contains the iframe link. Redirect clients to the link
+to complete the payment or render it on your website. See exsmple below how to render it
+
+```html
+<!--some page content here-->
+<div>
+    <iframe src="https://pay.pesapal.com/iframe/PesapalIframe3/Index/?OrderTrackingId=483decd1-cf2a-4ce4-8475-df6c07da6a51" height="100%" width="100%" title="Payment Iframe"></iframe>
+</div>
+<!--other page content here-->
+```
+
+This is how the payment iframe should look when rendered
+<img src="src/images/iframe.JPG">
+
+
+Get Transaction Status
+Once Pesapal redirect your customer to your callback URL and triggers your IPN URL, you need to check the status of the payment using the OrderTrackingId.
+
+Transaction status returns transaction info and status code. This will allow you to update the transaction details based on the
+status code. The status code are as follows:
+* 0 - INVALID
+* 1 - COMPLETED
+* 2 - FAILED
+* 3 - REVERSED
+
+See example below on how to request transaction status:
+```php
+use Nyawach\LaravelPesapal\Facades\Pesapal;
+use \Nyawach\LaravelPesapal\Models\Pesapal;
+
+class PesapalController extends Controller{
+
+//callback url function
+
+public  function pesapalCallback(Request $request){
+   $transaction_status=Pesapal::getTransactionStatus($request->OrderTrackingId)
+   /*
+    * Based on the transaction status_code you can update the transaction details as
+    * failed  or complete. If the transaction is not complete
+    * you can redirect the users to attempt the payment again.
+    */
+    
+    //if the transaction is complete
+    
+    if ($transaction_status->status_code===1){
+    $order=Pesapal::where('tracking_id',$request->OrderTrackingId)->firstOrFail();
+     //check if the amounts match
+     if ($order->amount==$transaction_status->amount){
+      $order->status=$transaction_status->status_code
+      $order->save()
+      //redirect user to another page. Maybe thank you page
+     }else{
+     // do something else if the amounts do not match
+     }
+    }else{
+     //do something else such redirecting users to attempt the payment again
+    }
+}
+
+}
+
+```
+A successful get transaction status should return a response that looks
+similar to the one below.
+
+<img src="src/images/status_response.JPG">
+
+#### Security and Vulnerabilities
+If you discover a security vulnerability within laravel-pesapal, please send an e-mail to Joshua Nyawach via nyawach41@gmail.com. All security vulnerabilities will be promptly addressed.
+
+#### License
+Laravel-pesapal is an open source software licensed under the [MIT License](https://opensource.org/licenses/MIT)

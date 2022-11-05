@@ -106,7 +106,7 @@ class LaravelPesapal
      * $request = An object from your system
      * $access_token  = Token you received from calling getAccessToken()
      */
-    public function getMerchertOrderURL($postData){
+    public function getMerchantOrderURL($postData){
         $headers = array();
         $headers['accept'] = 'text/plain';
         $headers['content-type'] = 'application/json';
