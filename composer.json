@@ -14,7 +14,7 @@
                 "Nyawach\\LaravelPesapal\\PesaPalServiceProvider"
             ],
             "aliases": {
-                "Pesapal": "Nyawach\\LaravelPesapal\\Facades"
+                "LaravelPesapal": "Nyawach\\LaravelPesapal\\Facades"
             }
         }
     },
