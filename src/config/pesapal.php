@@ -32,7 +32,7 @@ return[
      */
 
 
-    'pesapsal_ipn_id'=>env('PESAPAL_IPN_ID')
+    'pesapal_ipn_id'=>env('PESAPAL_IPN_ID')
 
 
 ];

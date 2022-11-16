@@ -122,7 +122,7 @@ See below on how to submit an order request
 
 ```php
 use Nyawach\LaravelPesapal\Facades\LaravelPesapal;
-use \Nyawach\LaravelPesapal\Models\Pesapal;
+use Nyawach\LaravelPesapal\Models\Pesapal;
 
 class PesapalController extends Controller
 {
@@ -160,15 +160,15 @@ class PesapalController extends Controller
         
        */
        
-       $transaction=new Pesapal()
-       $transaction->tracking_id=$order->order_tracking_id
+       $transaction=new Pesapal();
+       $transaction->tracking_id=$order->order_tracking_id;
        $transaction->language=$postData['language'];
        $transaction->currency=$postData['currency'];
        $transaction->amount=$postData['amount'];
        $transaction->merchant_reference=$postData['id'];
-       $transaction->decription=$postData["description"];
+       $transaction->description=$postData["description"];
        $transaction->phone_number=$postData["billing_address"]["phone_number"] ; 
-       $transaction->email_address=$postData["billing_address"]["email_address"];
+       $transaction->email=$postData["billing_address"]["email_address"];
        $transaction->country_code=$postData["billing_address"]["country_code"];
        $transaction->first_name=$postData["billing_address"]["first_name"];
        $transaction->middle_name=$postData["billing_address"]["middle_name"];
