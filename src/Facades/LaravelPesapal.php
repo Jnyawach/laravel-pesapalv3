@@ -2,7 +2,7 @@
 
 namespace Nyawach\LaravelPesapal\Facades;
 use Illuminate\Support\Facades\Facade;
-class Pesapal extends Facade
+class LaravelPesapal extends Facade
 {
 
     public static function getFacadeAccessor()

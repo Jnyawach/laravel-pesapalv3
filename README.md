@@ -14,7 +14,9 @@ This package enables you to set up Pesapal V3 web payment in under 5 minutes
 #### configuration
 To publish the pesapal config file and migrations run:
 
-`php artisan vendor:publish --tag=pesapal-config`
+```php 
+php artisan vendor:publish --provider="Nyawach\LaravelPesapal\PesaPalServiceProvider"
+```
 
 ##### Sample Config file
 
@@ -86,7 +88,7 @@ An IPN is particular important as it allows you to be notified incase the follow
 In your controller
 
 ```php 
-use Nyawach\LaravelPesapal\Facades\Pesapal;
+use Nyawach\LaravelPesapal\Facades\LaravelPesapal;
 class PesapalController extends Controller
 {
 public function getIpn(){
@@ -98,7 +100,7 @@ public function getIpn(){
  */
  $postData["ipn_notification_type"]='POST';
  
- $register=Pesapal::registerIpn($postData);
+ $register=LaravelPesapal::registerIpn($postData);
  return $register:
 }
 }
@@ -119,7 +121,7 @@ It is also important that you save the order details in you database.
 See below on how to submit an order request
 
 ```php
-use Nyawach\LaravelPesapal\Facades\Pesapal;
+use Nyawach\LaravelPesapal\Facades\LaravelPesapal;
 use \Nyawach\LaravelPesapal\Models\Pesapal;
 
 class PesapalController extends Controller
@@ -148,7 +150,7 @@ class PesapalController extends Controller
         $postData["notification_id"] = config('pesapal.pesapal_ipn_id'); //IPN_id from your .env file
         $postData["terms_and_conditions_id"] = "";
         //return $postData;
-        $order=Pesapal::getMerchantOrderURL($postData);
+        $order=LaravelPesapal::getMerchantOrderURL($postData);
          
          /*
           * Save the transaction details to the database then later update
@@ -180,7 +182,9 @@ class PesapalController extends Controller
        
        $transaction->save();
        
-       //You only need to save fields that are important to you
+     //You only need to save fields that are important to you
+     
+     return $order;
        
        
  }
@@ -220,7 +224,7 @@ status code. The status code are as follows:
 
 See example below on how to request transaction status:
 ```php
-use Nyawach\LaravelPesapal\Facades\Pesapal;
+use Nyawach\LaravelPesapal\Facades\LaravelPesapal;
 use \Nyawach\LaravelPesapal\Models\Pesapal;
 
 class PesapalController extends Controller{
@@ -228,7 +232,7 @@ class PesapalController extends Controller{
 //callback url function
 
 public  function pesapalCallback(Request $request){
-   $transaction_status=Pesapal::getTransactionStatus($request->OrderTrackingId)
+   $transaction_status=LaravelPesapal::getTransactionStatus($request->OrderTrackingId)
    /*
     * Based on the transaction status_code you can update the transaction details as
     * failed  or complete. If the transaction is not complete

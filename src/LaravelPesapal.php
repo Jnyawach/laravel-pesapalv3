@@ -5,7 +5,7 @@ namespace Nyawach\LaravelPesapal;
 class LaravelPesapal
 {
  /*
-  * The common endpoint for Pesapal v3
+  * The common endpoint for LaravelPesapal v3
   */
 
     private $base_url;
