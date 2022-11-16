@@ -8,6 +8,16 @@
             "Nyawach\\LaravelPesapal\\": "src/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Nyawach\\LaravelPesapal\\PesaPalServiceProvider"
+            ],
+            "aliases": {
+                "Pesapal": "Nyawach\\LaravelPesapal\\Facades"
+            }
+        }
+    },
     "authors": [
         {
             "name": "jnyawach",
