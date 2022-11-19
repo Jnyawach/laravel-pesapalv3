@@ -1,6 +1,6 @@
 ### **Pesapal V3 Package for Laravel Applications**
 
-[![Latest Stable Version](http://poser.pugx.org/nyawach/laravel-pesapal/v1.0.0)](https://packagist.org/packages/nyawach/laravel-pesapal) [![Total Downloads](http://poser.pugx.org/nyawach/laravel-pesapal/downloads)](https://packagist.org/packages/nyawach/laravel-pesapal) [![Latest Unstable Version](http://poser.pugx.org/nyawach/laravel-pesapal/v/)](https://packagist.org/packages/nyawach/laravel-pesapal) [![License](http://poser.pugx.org/nyawach/laravel-pesapal/license)](https://packagist.org/packages/nyawach/laravel-pesapal) [![PHP Version Require](http://poser.pugx.org/nyawach/laravel-pesapal/require/php)](https://packagist.org/packages/nyawach/laravel-pesapal)
+[![Latest Stable Version](http://poser.pugx.org/nyawach/laravel-pesapal/v)](https://packagist.org/packages/nyawach/laravel-pesapal) [![Total Downloads](http://poser.pugx.org/nyawach/laravel-pesapal/downloads)](https://packagist.org/packages/nyawach/laravel-pesapal) [![Latest Unstable Version](http://poser.pugx.org/nyawach/laravel-pesapal/v/unstable)](https://packagist.org/packages/nyawach/laravel-pesapal) [![License](http://poser.pugx.org/nyawach/laravel-pesapal/license)](https://packagist.org/packages/nyawach/laravel-pesapal) [![PHP Version Require](http://poser.pugx.org/nyawach/laravel-pesapal/require/php)](https://packagist.org/packages/nyawach/laravel-pesapal)
 
 This package enables you to set up Pesapal V3 web payment in under 5 minutes
 ## Preinstallation requirements
