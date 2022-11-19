@@ -246,6 +246,7 @@ public  function pesapalCallback(Request $request){
      //check if the amounts match
      if ($order->amount==$transaction_status->amount){
       $order->status=$transaction_status->status_code
+      $order->payment_method=$transaction_status->payment_method
       $order->save()
       //redirect user to another page. Maybe thank you page
      }else{
