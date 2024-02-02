@@ -87,24 +87,27 @@ An IPN is particular important as it allows you to be notified incase the follow
 
 In your controller
 
-```php 
+```php
 use Nyawach\LaravelPesapal\Facades\LaravelPesapal;
 class PesapalController extends Controller
-{
-public function getIpn(){
- $postData=array();
- //Sample Notification URL guarded by unique string
- $postData["url"]='https://mywebsite/getNotification/'.config('pesapal.pesapal_guard');
- /* IPN Notification type. 
- * This will tell Pesapal how to send the notification. As a POST or GET request
- */
- $postData["ipn_notification_type"]='POST';
+    {
+
+    public function registerIpn(){
+    $postData=array();
+    //Sample Notification URL guarded by unique string
+     $postData["url"]='https://mywebsite/getNotification/'.config('pesapal.pesapal_guard');
  
- $register=LaravelPesapal::registerIpn($postData);
- return $register:
-}
+    /* IPN Notification type. 
+    * This will tell Pesapal how to send the notification. As a POST or GET request
+    */
+    $postData["ipn_notification_type"]='POST';
+ 
+    return LaravelPesapal::registerIpn($postData);
+ 
+    }
 }
 ```
+
 Make sure you have saved the IPN id in your .env file.
 
 A successful IPN registration response will look like this.
@@ -212,7 +215,7 @@ This is how the payment iframe should look when rendered
 <img src="src/images/iframe.JPG">
 
 
-Get Transaction Status
+#### Get Transaction Status
 Once Pesapal redirect your customer to your callback URL and triggers your IPN URL, you need to check the status of the payment using the OrderTrackingId.
 
 Transaction status returns transaction info and status code. This will allow you to update the transaction details based on the
@@ -264,6 +267,40 @@ A successful get transaction status should return a response that looks
 similar to the one below.
 
 <img src="src/images/status_response.JPG">
+
+#### Refund Payment
+Use this endpoint to refund payments to customer. See example below
+
+```php
+use Nyawach\LaravelPesapal\Facades\LaravelPesapal;
+class PesapalController{
+
+    public function refundPayments(){
+        /*
+         * confirmation_code:This refers to payment confirmation code that was returned by the processor
+         * amount: Amount to be refunded.
+         * username: Identity of the user who has initiated the refund.
+         * remarks: A brief description on the reason for the refund.
+         */
+        $postData=array();   
+        $postData['confirmation_code']='AA11BB22' //required
+        $postData['amount']='100.00'//required
+        $postData['username']='John Doe', //required
+        $postData['remarks'] //required
+        
+       return LaravelPesapal::refundTransaction($postData)
+        
+  
+    }
+
+}
+```
+On a successful request the following response will be returned
+<img src="src/images/refund-transaction-response.PNG">
+
+**The refund API uses the confirm code for identification. 
+It's important that you store all payment confirmation codes 
+as returned in the Get Transaction Status Endpoint**
 
 #### Security and Vulnerabilities
 If you discover a security vulnerability within laravel-pesapal, please send an e-mail to Joshua Nyawach via nyawach41@gmail.com. All security vulnerabilities will be promptly addressed.

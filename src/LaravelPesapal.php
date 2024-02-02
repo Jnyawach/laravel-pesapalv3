@@ -5,7 +5,7 @@ namespace Nyawach\LaravelPesapal;
 class LaravelPesapal
 {
  /*
-  * The common endpoint for LaravelPesapal v3
+  * The common endpoint for Laravel Pesapal v3
   */
 
     private $base_url;
@@ -57,17 +57,19 @@ class LaravelPesapal
     //Get the pesapal acess token. The token is valid for 5minutes
     public function getAccessToken(){
 
-        $headers = array();
-        $headers['accept'] = 'text/plain';
-        $headers['content-type'] = 'application/json';
-
-        $postData = array();
-        $postData['consumer_key'] = $this->consumer_key;
-        $postData['consumer_secret'] = $this->consumer_secret;
-        $endPoint = $this->base_url.'/api/Auth/RequestToken';
-        $response = $this->curlRequest($endPoint, $headers, $postData);
-
-        return $response->token;
+        try {
+            $headers = array();
+            $headers['accept'] = 'text/plain';
+            $headers['content-type'] = 'application/json';
+            $postData = array();
+            $postData['consumer_key'] = $this->consumer_key;
+            $postData['consumer_secret'] = $this->consumer_secret;
+            $endPoint = $this->base_url.'/api/Auth/RequestToken';
+            $response = $this->curlRequest($endPoint, $headers, $postData);
+            return $response->token;
+        }catch (\Exception $e){
+            throw new \Exception("Error: ".$e->getMessage());
+        }
     }
 
     /**
@@ -75,15 +77,15 @@ class LaravelPesapal
      * $access_token  = Token you received from calling getAccessToken()
      */
     public function getRegisteredIpn(){
-        $headers = array();
-        $headers['accept'] = 'text/plain';
-        $headers['content-type'] = 'application/json';
-        $headers['authorization'] = 'Bearer '.$this->accessToken;
+        try {
+            $headers = $this->getHeaders();
+            $endPoint = $this->base_url.'/api/URLSetup/GetIpnList';
+            $response = $this->curlRequest($endPoint, $headers);
 
-        $endPoint = $this->base_url.'/api/URLSetup/GetIpnList';
-        $response = $this->curlRequest($endPoint, $headers);
-
-        return $response;
+            return $response;
+        }catch (\Exception $e){
+            throw new \Exception("Error: ".$e->getMessage());
+        }
     }
 
     /**
@@ -92,13 +94,14 @@ class LaravelPesapal
      */
 
     public function registerIpn($postData){
-        $headers = array();
-        $headers['accept'] = 'text/plain';
-        $headers['content-type'] = 'application/json';
-        $headers['authorization'] = 'Bearer '.$this->accessToken;
-        $endPoint = $this->base_url.'/api/URLSetup/RegisterIPN';
-        $response = $this->curlRequest($endPoint, $headers, $postData);
-        return $response;
+        try {
+            $headers = $this->getHeaders();
+            $endPoint = $this->base_url.'/api/URLSetup/RegisterIPN';
+            $response = $this->curlRequest($endPoint, $headers, $postData);
+            return $response;
+        }catch (\Exception $e){
+            throw new \Exception("Error: ".$e->getMessage());
+        }
 
     }
 
@@ -107,34 +110,57 @@ class LaravelPesapal
      * $access_token  = Token you received from calling getAccessToken()
      */
     public function getMerchantOrderURL($postData){
-        $headers = array();
-        $headers['accept'] = 'text/plain';
-        $headers['content-type'] = 'application/json';
-        $headers['authorization'] = 'Bearer '.$this->accessToken;
+
+        //get merchant order url
+        try {
+            $headers =$this->getHeaders();
+            $endPoint = $this->base_url.'/api/Transactions/SubmitOrderRequest';
+            $response = $this->curlRequest($endPoint, $headers, $postData);
 
 
-        $endPoint = $this->base_url.'/api/Transactions/SubmitOrderRequest';
-        $response = $this->curlRequest($endPoint, $headers, $postData);
-
-
-        return $response;
+            return $response;
+        }catch (\Exception $e){
+            throw new \Exception("Error: ".$e->getMessage());
+        }
     }
 
     /**
-     * $orderTrackingId - Guid you received from calling getMerchertOrderURL()
+     * $orderTrackingId - Uuid you received from calling getMerchertOrderURL()
      * $access_token  = Token you received from calling getAccessToken()
      */
     public function getTransactionStatus($orderTrackingId){
 
+        try {
+            $headers=$this->getHeaders();
+            $endPoint = $this->base_url.'/api/Transactions/GetTransactionStatus?orderTrackingId='.$orderTrackingId;
+            return $this->curlRequest($endPoint, $headers);
+        }catch (\Exception $e){
+            throw new \Exception("Error: ".$e->getMessage());
+        }
+
+    }
+
+    /**
+     * Request Pesapal to refund a transaction
+     * $postData  = {amount, confirmation_code, username,remarks}
+     */
+    public function refundTransaction($posData){
+        try {
+            $headers=$this->getHeaders();
+            $endPoint = $this->base_url.'/api/Transactions/RefundRequestt';
+            return $this->curlRequest($endPoint, $headers, $posData);
+        }catch (\Exception $e){
+            throw new \Exception("Error: ".$e->getMessage());
+        }
+    }
+
+
+    protected function getHeaders(){
         $headers = array();
         $headers['accept'] = 'text/plain';
         $headers['content-type'] = 'application/json';
         $headers['authorization'] = 'Bearer '.$this->accessToken;
-
-        $endPoint = $this->base_url.'/api/Transactions/GetTransactionStatus?orderTrackingId='.$orderTrackingId;
-        $response = $this->curlRequest($endPoint, $headers);
-
-        return $response;
+        return $headers;
     }
 
     //curl request
