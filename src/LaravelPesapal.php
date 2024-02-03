@@ -66,7 +66,10 @@ class LaravelPesapal
             $postData['consumer_secret'] = $this->consumer_secret;
             $endPoint = $this->base_url.'/api/Auth/RequestToken';
             $response = $this->curlRequest($endPoint, $headers, $postData);
-            return $response->token;
+            if (isset($response->token)){
+                return $response->token;
+            }
+            throw new \Exception("Error: ".$response->message);
         }catch (\Exception $e){
             throw new \Exception("Error: ".$e->getMessage());
         }
