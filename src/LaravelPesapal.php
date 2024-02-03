@@ -147,7 +147,7 @@ class LaravelPesapal
     public function refundTransaction($posData){
         try {
             $headers=$this->getHeaders();
-            $endPoint = $this->base_url.'/api/Transactions/RefundRequestt';
+            $endPoint = $this->base_url.'/api/Transactions/RefundRequest';
             return $this->curlRequest($endPoint, $headers, $posData);
         }catch (\Exception $e){
             throw new \Exception("Error: ".$e->getMessage());

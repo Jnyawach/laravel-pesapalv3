@@ -19,40 +19,41 @@ php artisan vendor:publish --provider="Nyawach\LaravelPesapal\PesaPalServiceProv
 ```
 
 ##### Sample Config file
+```php
+//Please specify the environment pesapal is running on: production or sandbox
 
-    //Please specify the environment pesapal is running on: production or sandbox
-
-    'pesapal_env'=>env('PESAPAL_ENV'),
-
-
-    /*
-     * The application consumer key
-     *
-     */
-    'consumer_key'=>env('PESAPAL_CONSUMER_KEY'),
-
-    /*
-     * The application consumer Secret
-     */
-
-    'consumer_secret'=>env('PESAPAL_CONSUMER_SECRET'),
-
-    /*
-     * It is a good practise to guard your routes. We will use
-     * unique string to guard our callback and IPN Urls. Provide a random string to
-     * to guard the endpoints
-     */
-
-    'pesapal_guard'=>env('PESAPAL_GUARD'),
-
-    /*
-     * After registering the IPN URL(s). Pesapal provides an IPN ID.
-     * Copy that ID and save in you .env file. For a transaction to go through
-     * it must have an ipn_id
-     */
+'pesapal_env'=>env('PESAPAL_ENV'),
 
 
-    'pesapal_ipn_id'=>env('PESAPAL_IPN_ID')
+/*
+ * The application consumer key
+ *
+ */
+'consumer_key'=>env('PESAPAL_CONSUMER_KEY'),
+
+/*
+ * The application consumer Secret
+ */
+
+'consumer_secret'=>env('PESAPAL_CONSUMER_SECRET'),
+
+/*
+ * It is a good practise to guard your routes. We will use
+ * unique string to guard our callback and IPN Urls. Provide a random string to
+ * to guard the endpoints
+ */
+
+'pesapal_guard'=>env('PESAPAL_GUARD'),
+
+/*
+ * After registering the IPN URL(s). Pesapal provides an IPN ID.
+ * Copy that ID and save in you .env file. For a transaction to go through
+ * it must have an ipn_id
+ */
+
+
+'pesapal_ipn_id'=>env('PESAPAL_IPN_ID')
+```
 
 
 Refer to config/pesapal.php and create environment variable in your
@@ -60,10 +61,10 @@ Refer to config/pesapal.php and create environment variable in your
 
 ```
 PESAPAL_ENV=production
-PESAPAL_CONSUMER_KEY=qkio1BGGYAXTu2JOfm7XSXNruoZsrqEW
-PESAPAL_CONSUMER_SECRET=osGQ364R49cXKeOYSpaOnT++rHs=
-PESAPAL_GUARD=ahd55hrg57edhWYDGSS
-PESAPAL_IPN_ID=eh93o68a-32g1-49jd-bb77-df7c4c2e37cb
+PESAPAL_CONSUMER_KEY="Yourconsumer key"
+PESAPAL_CONSUMER_SECRET="Your secret key"
+PESAPAL_GUARD="Random string"
+PESAPAL_IPN_ID="IPN Id from Pesapal"
 ```
 
 
