@@ -19,40 +19,41 @@ php artisan vendor:publish --provider="Nyawach\LaravelPesapal\PesaPalServiceProv
 ```
 
 ##### Sample Config file
+```php
+//Please specify the environment pesapal is running on: production or sandbox
 
-    //Please specify the environment pesapal is running on: production or sandbox
-
-    'pesapal_env'=>env('PESAPAL_ENV'),
-
-
-    /*
-     * The application consumer key
-     *
-     */
-    'consumer_key'=>env('PESAPAL_CONSUMER_KEY'),
-
-    /*
-     * The application consumer Secret
-     */
-
-    'consumer_secret'=>env('PESAPAL_CONSUMER_SECRET'),
-
-    /*
-     * It is a good practise to guard your routes. We will use
-     * unique string to guard our callback and IPN Urls. Provide a random string to
-     * to guard the endpoints
-     */
-
-    'pesapal_guard'=>env('PESAPAL_GUARD'),
-
-    /*
-     * After registering the IPN URL(s). Pesapal provides an IPN ID.
-     * Copy that ID and save in you .env file. For a transaction to go through
-     * it must have an ipn_id
-     */
+'pesapal_env'=>env('PESAPAL_ENV'),
 
 
-    'pesapal_ipn_id'=>env('PESAPAL_IPN_ID')
+/*
+ * The application consumer key
+ *
+ */
+'consumer_key'=>env('PESAPAL_CONSUMER_KEY'),
+
+/*
+ * The application consumer Secret
+ */
+
+'consumer_secret'=>env('PESAPAL_CONSUMER_SECRET'),
+
+/*
+ * It is a good practise to guard your routes. We will use
+ * unique string to guard our callback and IPN Urls. Provide a random string to
+ * to guard the endpoints
+ */
+
+'pesapal_guard'=>env('PESAPAL_GUARD'),
+
+/*
+ * After registering the IPN URL(s). Pesapal provides an IPN ID.
+ * Copy that ID and save in you .env file. For a transaction to go through
+ * it must have an ipn_id
+ */
+
+
+'pesapal_ipn_id'=>env('PESAPAL_IPN_ID')
+```
 
 
 Refer to config/pesapal.php and create environment variable in your
@@ -60,10 +61,10 @@ Refer to config/pesapal.php and create environment variable in your
 
 ```
 PESAPAL_ENV=production
-PESAPAL_CONSUMER_KEY=qkio1BGGYAXTu2JOfm7XSXNruoZsrqEW
-PESAPAL_CONSUMER_SECRET=osGQ364R49cXKeOYSpaOnT++rHs=
-PESAPAL_GUARD=ahd55hrg57edhWYDGSS
-PESAPAL_IPN_ID=eh93o68a-32g1-49jd-bb77-df7c4c2e37cb
+PESAPAL_CONSUMER_KEY="Yourconsumer key"
+PESAPAL_CONSUMER_SECRET="Your secret key"
+PESAPAL_GUARD="Random string"
+PESAPAL_IPN_ID="IPN Id from Pesapal"
 ```
 
 
@@ -87,24 +88,27 @@ An IPN is particular important as it allows you to be notified incase the follow
 
 In your controller
 
-```php 
+```php
 use Nyawach\LaravelPesapal\Facades\LaravelPesapal;
 class PesapalController extends Controller
-{
-public function getIpn(){
- $postData=array();
- //Sample Notification URL guarded by unique string
- $postData["url"]='https://mywebsite/getNotification/'.config('pesapal.pesapal_guard');
- /* IPN Notification type. 
- * This will tell Pesapal how to send the notification. As a POST or GET request
- */
- $postData["ipn_notification_type"]='POST';
+    {
+
+    public function registerIpn(){
+    $postData=array();
+    //Sample Notification URL guarded by unique string
+     $postData["url"]='https://mywebsite/getNotification/'.config('pesapal.pesapal_guard');
  
- $register=LaravelPesapal::registerIpn($postData);
- return $register:
-}
+    /* IPN Notification type. 
+    * This will tell Pesapal how to send the notification. As a POST or GET request
+    */
+    $postData["ipn_notification_type"]='POST';
+ 
+    return LaravelPesapal::registerIpn($postData);
+ 
+    }
 }
 ```
+
 Make sure you have saved the IPN id in your .env file.
 
 A successful IPN registration response will look like this.
@@ -212,7 +216,7 @@ This is how the payment iframe should look when rendered
 <img src="src/images/iframe.JPG">
 
 
-Get Transaction Status
+#### Get Transaction Status
 Once Pesapal redirect your customer to your callback URL and triggers your IPN URL, you need to check the status of the payment using the OrderTrackingId.
 
 Transaction status returns transaction info and status code. This will allow you to update the transaction details based on the
@@ -264,6 +268,40 @@ A successful get transaction status should return a response that looks
 similar to the one below.
 
 <img src="src/images/status_response.JPG">
+
+#### Refund Payment
+Use this endpoint to refund payments to customer. See example below
+
+```php
+use Nyawach\LaravelPesapal\Facades\LaravelPesapal;
+class PesapalController{
+
+    public function refundPayments(){
+        /*
+         * confirmation_code:This refers to payment confirmation code that was returned by the processor
+         * amount: Amount to be refunded.
+         * username: Identity of the user who has initiated the refund.
+         * remarks: A brief description on the reason for the refund.
+         */
+        $postData=array();   
+        $postData['confirmation_code']='AA11BB22' //required
+        $postData['amount']='100.00'//required
+        $postData['username']='John Doe', //required
+        $postData['remarks'] //required
+        
+       return LaravelPesapal::refundTransaction($postData)
+        
+  
+    }
+
+}
+```
+On a successful request the following response will be returned
+<img src="src/images/refund-transaction-response.PNG">
+
+**The refund API uses the confirm code for identification. 
+It's important that you store all payment confirmation codes 
+as returned in the Get Transaction Status Endpoint**
 
 #### Security and Vulnerabilities
 If you discover a security vulnerability within laravel-pesapal, please send an e-mail to Joshua Nyawach via nyawach41@gmail.com. All security vulnerabilities will be promptly addressed.
